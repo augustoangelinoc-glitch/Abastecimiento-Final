@@ -72,12 +72,20 @@ with tab2:
     filtros = st.multiselect("Mostrar situaciones", sorted(analysis["situacion"].dropna().unique()),
                              default=sorted(analysis["situacion"].dropna().unique()))
     view = analysis[analysis["situacion"].isin(filtros)].copy()
-    st.dataframe(view[[
+ display_cols = [
         "codigo","descripcion","familia","stock_actual","costo_unitario","valor_inventario",
         "consumo_mensual","consumo_reciente","variabilidad_cv","tendencia","abc","xyz",
         "lead_time_mediano","oc_pendiente","cobertura_dias","stock_seguridad",
         "punto_pedido","stock_objetivo","cantidad_recomendada","riesgo","situacion","explicacion"
-    ]], use_container_width=True, hide_index=True)
+    ]
+
+display_cols = [c for c in display_cols if c in view.columns]
+
+st.dataframe(
+    view[display_cols],
+    use_container_width=True,
+    hide_index=True
+)
 
     st.subheader("Detalle de material")
     selected = st.selectbox("Código", analysis["codigo"].astype(str).tolist())
